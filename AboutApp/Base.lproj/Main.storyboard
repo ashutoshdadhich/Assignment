@@ -80,12 +80,13 @@
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
+                        <outlet property="btnRefresh" destination="Zvo-eM-oc8" id="7DQ-a7-RxV"/>
                         <outlet property="tblAboutData" destination="GPd-NU-OJF" id="QDp-oA-ksc"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ei6-RV-cwk" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-269" y="357"/>
+            <point key="canvasLocation" x="-194" y="315"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="T2s-8X-oE3">

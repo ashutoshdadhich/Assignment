@@ -15,6 +15,7 @@
     NSMutableDictionary* imageTaskTracker;
 }
 
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *btnRefresh;
 @property (nonatomic, strong) NSArray* aboutEntityList;
 @property (strong, nonatomic) IBOutlet UITableView *tblAboutData;
 
@@ -25,7 +26,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.title = @"";
+    self.title = @"Loading...";
+    self.btnRefresh.enabled = NO;
     
     //incock web handler to get server data
     webHandler = [[AboutWebHandler alloc] init];
@@ -63,6 +65,7 @@
     static NSString *CellIdentifier = @"AboutListCell";
     
     UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
   
     AboutEntity* entity = [self.aboutEntityList objectAtIndex:indexPath.row];
     
@@ -80,8 +83,11 @@
     }else{
         [imageView setImage:[UIImage imageNamed:@"default-placeholder.png"]];
         if (![entity.strImageURL isEqualToString:@""]) {
+            if (self.tableView.dragging == NO && self.tableView.decelerating == NO)
+            {
+                [self loadCellImageForIndex:indexPath withEntity:entity];
+            }
             
-            [self loadCellImageForIndex:indexPath withEntity:entity];
         }
     }
     
@@ -93,6 +99,7 @@
 -(void)didReciveEntityList:(NSArray*)entityList withTitle:(NSString*)title{
     
     self.title = title;
+    self.btnRefresh.enabled = YES;
     
     if (entityList) {
         // store and reload table data
@@ -101,14 +108,43 @@
     }
 }
 
-- (IBAction)actionRefresh:(id)sender {
-    //refresh the about list
-    
-    //clear entity list
-    
-    //terminate all image downloading tasks
-    
-    //request webadata
+
+
+#pragma mark - UIScrollViewDelegate
+
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    if (!decelerate)
+    {
+        [self loadImagesForVisibleRows];
+    }
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    [self loadImagesForVisibleRows];
+}
+
+
+#pragma mark - Utility and IBAction Handlers
+
+- (void)loadImagesForVisibleRows
+{
+    if (self.aboutEntityList.count > 0)
+    {
+        NSArray *visiblePaths = [self.tableView indexPathsForVisibleRows];
+        for (NSIndexPath *indexPath in visiblePaths)
+        {
+            AboutEntity* entity = [ self.aboutEntityList objectAtIndex:indexPath.row];
+            
+            if (!entity.image)
+                // Avoid the app icon download if the app already has an icon
+            {
+                [self loadCellImageForIndex:indexPath withEntity:entity];
+            }
+        }
+    }
 }
 
 -(void)loadCellImageForIndex:(NSIndexPath*)indexPath withEntity:(AboutEntity*)entity{
@@ -151,6 +187,24 @@
         [imageTaskTracker  setObject:imageLoader forKey:indexPath];
     }
     
+}
+
+
+- (IBAction)actionRefresh:(id)sender {
+    
+    //terminate all image downloading tasks
+    [self terminateAllDownloads];
+    
+    //request webadata
+    [webHandler getWebData];
+}
+
+
+
+-(void)terminateAllDownloads{
+    NSArray *allDownloads = [imageTaskTracker allValues];
+    [allDownloads makeObjectsPerformSelector:@selector(cancelImageDownloading)];
+    [imageTaskTracker removeAllObjects];
 }
 
 @end

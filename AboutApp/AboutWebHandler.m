@@ -18,10 +18,10 @@ static NSString* const strWebURL = @"https://dl.dropboxusercontent.com/u/746330/
     
     // Create request object for the entity image URL
     NSURLRequest* request = [NSURLRequest requestWithURL:[NSURL URLWithString:strWebURL]];
-    
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     // Get task from shared session
     NSURLSessionTask* task = [[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData * data, NSURLResponse * response, NSError * error) {
-        
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
         if (error != nil)
         {
             abort();

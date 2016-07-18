@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "AboutWebHandler.h"
 
-@interface AboutViewController : UITableViewController <AboutWebHandlerDelegate>
+@interface AboutViewController : UITableViewController <AboutWebHandlerDelegate, UIScrollViewDelegate>
 
 @end

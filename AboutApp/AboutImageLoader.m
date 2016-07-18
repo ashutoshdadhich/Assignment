@@ -39,7 +39,7 @@
         else{
             // get main thread to update image property of Entity
             dispatch_sync(dispatch_get_main_queue(),^{
-                 NSLog(@"Image Downloaded...");
+                
                 UIImage *image = [[UIImage alloc] initWithData:data];
                 
                 if([image isKindOfClass:[UIImage class]]){
