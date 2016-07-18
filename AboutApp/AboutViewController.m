@@ -8,9 +8,11 @@
 
 #import "AboutViewController.h"
 #import "AboutEntity.h"
+#import "AboutImageLoader.h"
 
 @interface AboutViewController (){
     AboutWebHandler* webHandler;
+    NSMutableDictionary* imageTaskTracker;
 }
 
 @property (nonatomic, strong) NSArray* aboutEntityList;
@@ -29,6 +31,8 @@
     webHandler = [[AboutWebHandler alloc] init];
     webHandler.delegate = self;
     [webHandler getWebData];
+    
+    imageTaskTracker = [[NSMutableDictionary alloc] init];
     
     self.tableView.estimatedRowHeight = 92;
     self.tableView.rowHeight = UITableViewAutomaticDimension;
@@ -65,25 +69,19 @@
     UIImageView* imageView = (UIImageView*)[ cell viewWithTag:1 ];
     UILabel* lblTitle = (UILabel*)[ cell viewWithTag:2 ];
     UILabel* lblDescription = (UILabel*)[ cell viewWithTag:3 ];
-    
     lblTitle.text = entity.strTitle;
     lblDescription.text = entity.strDescription;
     
     // load cell image in background, if not available
-    
     if (entity.image != nil) {
         
         imageView.image = entity.image;
         
     }else{
-        
+        [imageView setImage:[UIImage imageNamed:@"default-placeholder.png"]];
         if (![entity.strImageURL isEqualToString:@""]) {
             
-            [self loadCellImageForIndex:indexPath withURL:entity.strImageURL];
-        }
-        else{
-            
-            [imageView setImage:[UIImage imageNamed:@""]];
+            [self loadCellImageForIndex:indexPath withEntity:entity];
         }
     }
     
@@ -103,7 +101,55 @@
     }
 }
 
--(void)loadCellImageForIndex:(NSIndexPath*)indexPath withURL:(NSString*)imageURL{
+- (IBAction)actionRefresh:(id)sender {
+    //refresh the about list
+    
+    //clear entity list
+    
+    //terminate all image downloading tasks
+    
+    //request webadata
+}
+
+-(void)loadCellImageForIndex:(NSIndexPath*)indexPath withEntity:(AboutEntity*)entity{
+    
+    //Keep track of downloaders
+    AboutImageLoader* imageLoader = [imageTaskTracker objectForKey:indexPath];
+    
+    // start image download only if not already downloading
+    if (!imageLoader) {
+        
+        
+        // instantiate the image loader and provide completion block
+        imageLoader = [[AboutImageLoader alloc] init];
+        imageLoader.entity = entity;
+        imageLoader.completionHandler = ^{
+            
+            // On successful image download get the appropriate cell and set the image
+            UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+
+            UIImageView* imageView = (UIImageView*)[ cell viewWithTag:1 ];
+            
+            UIActivityIndicatorView* indicator = (UIActivityIndicatorView*)[ cell viewWithTag:4 ];
+            
+            imageView.image = entity.image;
+            
+            indicator.hidden = YES;
+            [indicator stopAnimating];
+            
+            // remove from tracker
+            [imageTaskTracker removeObjectForKey:indexPath];
+            
+        };
+        
+        imageLoader.failureHandler = ^{
+            // Handel Failure
+           
+        };
+        
+        [imageLoader startImageDownloading];
+        [imageTaskTracker  setObject:imageLoader forKey:indexPath];
+    }
     
 }
 
