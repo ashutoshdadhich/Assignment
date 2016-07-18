@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "AboutWebHandler.h"
 
-@interface AboutViewController : UITableViewController
+@interface AboutViewController : UITableViewController <AboutWebHandlerDelegate>
 
 @end

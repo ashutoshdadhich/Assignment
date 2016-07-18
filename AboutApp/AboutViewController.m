@@ -7,8 +7,14 @@
 //
 
 #import "AboutViewController.h"
+#import "AboutEntity.h"
 
-@interface AboutViewController ()
+@interface AboutViewController (){
+    AboutWebHandler* webHandler;
+}
+
+@property (nonatomic, strong) NSArray* aboutEntityList;
+@property (strong, nonatomic) IBOutlet UITableView *tblAboutData;
 
 @end
 
@@ -17,11 +23,16 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
+    self.title = @"";
     
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    //incock web handler to get server data
+    webHandler = [[AboutWebHandler alloc] init];
+    webHandler.delegate = self;
+    [webHandler getWebData];
+    
+    self.tableView.estimatedRowHeight = 92;
+    self.tableView.rowHeight = UITableViewAutomaticDimension;
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -32,67 +43,68 @@
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-#warning Incomplete implementation, return the number of sections
-    return 0;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-#warning Incomplete implementation, return the number of rows
+    
+    if (self.aboutEntityList.count > 0) {
+        return self.aboutEntityList.count;
+    }
     return 0;
 }
 
-/*
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     
-    // Configure the cell...
+    static NSString *CellIdentifier = @"AboutListCell";
+    
+    UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+  
+    AboutEntity* entity = [self.aboutEntityList objectAtIndex:indexPath.row];
+    
+    UIImageView* imageView = (UIImageView*)[ cell viewWithTag:1 ];
+    UILabel* lblTitle = (UILabel*)[ cell viewWithTag:2 ];
+    UILabel* lblDescription = (UILabel*)[ cell viewWithTag:3 ];
+    
+    lblTitle.text = entity.strTitle;
+    lblDescription.text = entity.strDescription;
+    
+    // load cell image in background, if not available
+    
+    if (entity.image != nil) {
+        
+        imageView.image = entity.image;
+        
+    }else{
+        
+        if (![entity.strImageURL isEqualToString:@""]) {
+            
+            [self loadCellImageForIndex:indexPath withURL:entity.strImageURL];
+        }
+        else{
+            
+            [imageView setImage:[UIImage imageNamed:@""]];
+        }
+    }
     
     return cell;
 }
-*/
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
+#pragma mark - About Web Handler Delegate
+
+-(void)didReciveEntityList:(NSArray*)entityList withTitle:(NSString*)title{
+    
+    self.title = title;
+    
+    if (entityList) {
+        // store and reload table data
+        self.aboutEntityList = [NSArray arrayWithArray:entityList];
+        [self.tableView reloadData];
+    }
 }
-*/
 
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
+-(void)loadCellImageForIndex:(NSIndexPath*)indexPath withURL:(NSString*)imageURL{
+    
 }
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

@@ -7,6 +7,7 @@
 //
 
 #import "AboutWebHandler.h"
+#import "AboutEntity.h"
 
 static NSString* const strWebURL = @"https://dl.dropboxusercontent.com/u/746330/facts.json";
 
@@ -47,7 +48,8 @@ static NSString* const strWebURL = @"https://dl.dropboxusercontent.com/u/746330/
                     
                     if (dict) {
                         
-                        
+                        AboutEntity* entity = [[AboutEntity alloc] initWithData:dict];
+                        [entityList addObject:entity];
                     }
                 }
             }

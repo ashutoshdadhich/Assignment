@@ -14,6 +14,7 @@
 		32FC7D2A1D3D1FA900992073 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 32FC7D281D3D1FA900992073 /* LaunchScreen.storyboard */; };
 		32FC7D331D3D1FF700992073 /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 32FC7D321D3D1FF700992073 /* AboutViewController.m */; settings = {ASSET_TAGS = (); }; };
 		32FC7D361D3D290E00992073 /* AboutWebHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 32FC7D351D3D290E00992073 /* AboutWebHandler.m */; settings = {ASSET_TAGS = (); }; };
+		32FC7D391D3D2BB000992073 /* AboutEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 32FC7D381D3D2BB000992073 /* AboutEntity.m */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +30,8 @@
 		32FC7D321D3D1FF700992073 /* AboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutViewController.m; sourceTree = "<group>"; };
 		32FC7D341D3D290E00992073 /* AboutWebHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutWebHandler.h; sourceTree = "<group>"; };
 		32FC7D351D3D290E00992073 /* AboutWebHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutWebHandler.m; sourceTree = "<group>"; };
+		32FC7D371D3D2BB000992073 /* AboutEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutEntity.h; sourceTree = "<group>"; };
+		32FC7D381D3D2BB000992073 /* AboutEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutEntity.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +75,8 @@
 				32FC7D1A1D3D1FA900992073 /* Supporting Files */,
 				32FC7D341D3D290E00992073 /* AboutWebHandler.h */,
 				32FC7D351D3D290E00992073 /* AboutWebHandler.m */,
+				32FC7D371D3D2BB000992073 /* AboutEntity.h */,
+				32FC7D381D3D2BB000992073 /* AboutEntity.m */,
 			);
 			path = AboutApp;
 			sourceTree = "<group>";
@@ -157,6 +162,7 @@
 				32FC7D1F1D3D1FA900992073 /* AppDelegate.m in Sources */,
 				32FC7D331D3D1FF700992073 /* AboutViewController.m in Sources */,
 				32FC7D1C1D3D1FA900992073 /* main.m in Sources */,
+				32FC7D391D3D2BB000992073 /* AboutEntity.m in Sources */,
 				32FC7D361D3D290E00992073 /* AboutWebHandler.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
